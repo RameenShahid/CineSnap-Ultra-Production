@@ -7,6 +7,21 @@ Whether you want a simple **no-setup HTML tool** or a **scalable production-read
 
 ---
 
+🌐 **Live Demo:**  
+👉 https://rameenshahid.github.io/CineSnap-Ultra-Production/
+
+---
+
+## 🖥 Preview
+
+Click below to open the app in your browser:
+
+[![CineSnap Ultra Preview](https://rameenshahid.github.io/CineSnap-Ultra-Production/preview.png)](https://rameenshahid.github.io/CineSnap-Ultra-Production/)
+
+> ⚡ If preview image doesn't load, just click the link above to open the live demo.
+
+---
+
 # 🌟 Features
 
 ## 🎨 AI Editing Capabilities
