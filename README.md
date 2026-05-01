@@ -52,4 +52,52 @@ Whether you want a simple **no-setup HTML tool** or a **scalable production-read
 ├── README.md
 └── setup.sh
 
+---
+
+## 📁 Complete Folder Structure
+## cinesnap-ultra/
+├── frontend/
+│ ├── app/
+│ │ ├── page.jsx
+│ │ ├── layout.jsx
+│ │ ├── globals.css
+│ │ ├── login/page.jsx
+│ │ ├── register/page.jsx
+│ │ └── dashboard/page.jsx
+│ ├── components/
+│ │ ├── Navbar.jsx
+│ │ ├── ImageUploader.jsx
+│ │ ├── Controls.jsx
+│ │ └── ResultViewer.jsx
+│ ├── utils/api.js
+│ ├── package.json
+│ ├── package-lock.json
+│ ├── next.config.js
+│ ├── .env.local
+│ └── tailwind.config.js
+│
+├── backend/
+│ ├── server.js
+│ ├── package.json
+│ ├── package-lock.json
+│ ├── .env
+│ ├── routes/
+│ │ ├── auth.js
+│ │ ├── removeBg.js
+│ │ └── billing.js
+│ ├── models/User.js
+│ ├── middleware/auth.js
+│ └── config/database.js
+│
+├── ai-service/
+│ ├── app.py
+│ ├── requirements.txt
+│ ├── .env
+│ └── Dockerfile
+│
+├── docker-compose.yml
+├── .gitignore
+├── README.md
+└── setup.sh
+
 # 🏗 Project Architecture
