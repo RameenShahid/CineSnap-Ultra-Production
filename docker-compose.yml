@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: cinesnap-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: cinesnap
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - cinesnap-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai-service:
+    build: ./ai-service
+    container_name: cinesnap-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - cinesnap-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build: ./backend
+    container_name: cinesnap-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/cinesnap?authSource=admin
+      - AI_URL=http://ai-service:8000/remove
+      - JWT_SECRET=${JWT_SECRET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - APP_URL=${APP_URL}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      ai-service:
+        condition: service_healthy
+    networks:
+      - cinesnap-network
+
+  frontend:
+    build: ./frontend
+    container_name: cinesnap-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+    depends_on:
+      - backend
+    networks:
+      - cinesnap-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  cinesnap-network:
+    driver: bridge

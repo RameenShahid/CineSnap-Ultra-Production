@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CineSnap Ultra | Professional AI Background Removal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-deep: #05070c;
+            --bg-card: #0d111a;
+            --bg-elevated: #161c2a;
+            --border: rgba(255,255,255,0.06);
+            --text: #f0f3fa;
+            --text-dim: #8b92a8;
+            --accent: #c084fc;
+            --accent2: #ec489a;
+            --accent3: #3b82f6;
+            --gradient: linear-gradient(135deg, #c084fc, #ec489a, #3b82f6);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at 30% 20%, #0f1119, #03050a);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent2);
+        }
+
+        /* Glass Navigation */
+        .glass-nav {
+            background: rgba(5, 7, 12, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        .gradient-text {
+            background: var(--gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .badge-premium {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.2), rgba(236, 72, 153, 0.1));
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            border: 1px solid rgba(192, 132, 252, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .credit-banner {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.12), rgba(236, 72, 153, 0.06));
+            text-align: center;
+            padding: 0.55rem;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .credit-banner strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff, var(--accent), var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        /* Editor Grid */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        @media (max-width: 900px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                padding: 0.8rem 1.2rem;
+            }
+            
+            .container {
+                padding: 1.2rem;
+            }
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1.8rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 1.4rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header i {
+            font-size: 1.3rem;
+            color: var(--accent);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            background: rgba(10, 12, 18, 0.5);
+            border: 2px dashed var(--border);
+            border-radius: 1.2rem;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: rgba(192, 132, 252, 0.05);
+            transform: scale(0.98);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+
+        .preview-box {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 1rem;
+            object-fit: contain;
+            background: #00000030;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.65rem 1.3rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(192, 132, 252, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.7rem;
+        }
+
+        .btn-lg {
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-change {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-change:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Cards */
+        .section-card {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border-radius: 1.2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: rgba(192, 132, 252, 0.3);
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bg-removal-card {
+            background: linear-gradient(135deg, #161c2a, #0f1320);
+            border: 1px solid rgba(192, 132, 252, 0.3);
+        }
+
+        /* Edge Detection Visual */
+        .edge-detection-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .edge-status {
+            font-size: 0.8rem;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+
+        .edge-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .step {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+            background: #1e2436;
+            border-radius: 1rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+            background: var(--gradient);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        .step.completed {
+            opacity: 1;
+            background: var(--success);
+            color: white;
+        }
+
+        /* Advanced Controls */
+        .advanced-controls {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+
+        .control-group-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .control-row {
+            margin-bottom: 0.8rem;
+        }
+
+        .control-row label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-dim);
+        }
+
+        .control-row small {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 0.2rem;
+            opacity: 0.7;
+        }
+
+        /* Mode Buttons */
+        .bg-modes {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            flex: 1;
+            background: #1e2436;
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            min-width: 80px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(192, 132, 252, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .mode-btn.active {
+            background: var(--gradient);
+            border-color: white;
+        }
+
+        /* Sliders */
+        .slider-group {
+            margin-bottom: 1rem;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-dim);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: #2a3040;
+            border-radius: 4px;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 6px var(--accent);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Preset Grid */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .preset-chip {
+            background: #1e2436;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .preset-chip:hover {
+            border-color: var(--accent);
+            background: rgba(192, 132, 252, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .preset-chip.active {
+            background: var(--gradient);
+            border-color: white;
+            color: white;
+        }
+
+        /* Result Container */
+        .result-container {
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #070b12;
+            border-radius: 1.2rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-img {
+            max-width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast-progress {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e2436ee;
+            backdrop-filter: blur(12px);
+            padding: 0.6rem 1.5rem;
+            border-radius: 3rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            z-index: 200;
+            border-left: 3px solid var(--accent);
+            font-weight: 500;
+            font-size: 0.85rem;
+            pointer-events: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 560px) {
+            .preset-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .bg-modes {
+                flex-direction: column;
+            }
+            
+            .edge-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">CS</div>
+                <span>CineSnap <span class="gradient-text">Ultra</span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <button onclick="showLoginModal()" class="btn btn-outline btn-sm">Login</button>
+                <button onclick="showRegisterModal()" class="btn btn-primary btn-sm">Sign Up Free →</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="credit-banner">
+        <i class="fas fa-crown"></i> Created by <strong>Rameen Shahid</strong> | Ultra-Advanced AI • Smart Edge Detection • Perfect Background Removal
+        <span class="ml-4">✨ 3 free tries for visitors!</span>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1>Ultra-Advanced <span class="gradient-text">AI Background Removal</span></h1>
+            <p>Smart edge detection • Perfect subject isolation • Professional alpha matting</p>
+        </header>
+
+        <div class="editor-grid">
+            <!-- LEFT PANEL - Upload & Controls -->
+            <div class="panel">
+                <div class="panel-header">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload & Edit</h3>
+                </div>
+
+                <!-- Upload Zone -->
+                <div class="upload-zone" id="uploadZone">
+                    <i class="fas fa-camera-retro upload-icon"></i>
+                    <p>Click, drag or paste image</p>
+                    <small>JPG, PNG, WEBP (max 12MB)</small>
+                    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+                    <button class="btn btn-outline" id="uploadTriggerBtn" style="margin-top: 0.8rem;">
+                        <i class="fas fa-folder-open"></i> Browse files
+                    </button>
+                </div>
+
+                <!-- Preview Panel -->
+                <div id="previewPanel" style="display:none;">
+                    <div class="preview-box">
+                        <img id="previewImage" class="preview-img" alt="preview">
+                        <button class="btn-change" id="changeFileBtn">
+                            <i class="fas fa-sync-alt"></i> Change Image
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edge Detection Visual -->
+                <div class="edge-detection-visual">
+                    <div class="edge-status" id="edgeStatus">⚡ AI Engine Ready</div>
+                    <div class="edge-steps">
+                        <span class="step" id="step1">1️⃣ Edge Detection</span>
+                        <span class="step" id="step2">2️⃣ Subject Isolation</span>
+                        <span class="step" id="step3">3️⃣ Alpha Matting</span>
+                        <span class="step" id="step4">4️⃣ Background Removal</span>
+                        <span class="step" id="step5">5️⃣ Refinement</span>
+                    </div>
+                </div>
+
+                <!-- Ultra-Advanced AI Engine -->
+                <div class="section-card bg-removal-card">
+                    <div class="section-title">
+                        <i class="fas fa-microchip"></i> Ultra-Advanced AI Engine
+                    </div>
+                    
+                    <button class="btn btn-primary btn-lg" id="smartBgBtn" style="width:100%;" disabled>
+                        <i class="fas fa-wand-magic"></i> 🚀 Run Ultra AI Background Removal
+                    </button>
+                    
+                    <div class="advanced-controls">
+                        <div class="control-group-header">
+                            <i class="fas fa-sliders-h"></i> Ultra-Precision Controls
+                        </div>
+                        
+                        <div class="control-row">
+                            <label>Edge Detection Strength: <span id="edgeSensitivityVal">75</span>%</label>
+                            <input type="range" id="edgeSensitivity" min="0" max="100" value="75">
+                            <small>Higher = detects more edges</small>
+                        </div>
+                        
+                        <div class="control-row">
+                            <label>Subject Isolation: <span id="subjectThresholdVal">60</span>%</label>
+                            <input type="range" id="subjectThreshold" min="0" max="100" value="60">
+                            <small>Adjusts subject vs background separation</small>
+                        </div>
+                        
+                        <div class="control-row">
+                            <label>Edge Smoothing: <span id="edgeSmoothingVal">50</span>%</label>
+                            <input type="range" id="edgeSmoothing" min="0" max="100" value="50">
+                            <small>Smooths detected edges</small>
+                        </div>
+                        
+                        <div class="control-row">
+                            <label>Feather Amount: <span id="featherVal">5</span>px</label>
+                            <input type="range" id="featherAmount" min="0" max="20" value="5">
+                            <small>Softens subject edges</small>
+                        </div>
+                        
+                        <div class="control-row">
+                            <label>Hair/Fur Detail: <span id="hairDetailVal">65</span>%</label>
+                            <input type="range" id="hairDetail" min="0" max="100" value="65">
+                            <small>Preserves fine hair and fur details</small>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-modes">
+                        <button class="mode-btn active" data-mode="auto">🤖 Auto Detect</button>
+                        <button class="mode-btn" data-mode="portrait">👤 Portrait Mode</button>
+                        <button class="mode-btn" data-mode="product">📦 Product Mode</button>
+                        <button class="mode-btn" data-mode="hair">💇 Hair/Fur Mode</button>
+                        <button class="mode-btn" data-mode="highContrast">⚡ High Contrast</button>
+                        <button class="mode-btn" data-mode="soft">🌸 Soft Edge</button>
+                    </div>
+                </div>
+
+                <!-- Cinematic Presets -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-film"></i> Cinematic Presets
+                    </div>
+                    <div class="preset-grid" id="presetGrid">
+                        <div class="preset-chip" data-preset="hollywood">🎬 Hollywood</div>
+                        <div class="preset-chip" data-preset="vintage">🎞️ Vintage</div>
+                        <div class="preset-chip" data-preset="cyberpunk">🤖 Cyberpunk</div>
+                        <div class="preset-chip" data-preset="noir">🕶️ Noir</div>
+                        <div class="preset-chip" data-preset="warmglow">☀️ Golden Hour</div>
+                        <div class="preset-chip" data-preset="icy">❄️ Winter Frost</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL - Result -->
+            <div class="panel">
+                <div class="panel-header">
+                    <i class="fas fa-star-of-life"></i>
+                    <h3>Masterpiece Output</h3>
+                </div>
+                <div class="result-container" id="resultContainer">
+                    <div id="resultPlaceholder" style="text-align:center; color:#8b92a8;">
+                        <i class="fas fa-image" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+                        <p>Your enhanced image will appear here</p>
+                        <small>Upload a photo and click "Run Ultra AI Background Removal"</small>
+                    </div>
+                    <img id="resultImage" style="display:none;" class="result-img" alt="result">
+                </div>
+                <div class="result-actions" id="resultActions" style="display:none;">
+                    <button class="btn btn-success" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download PNG
+                    </button>
+                    <button class="btn btn-outline" id="resetImageBtn">
+                        <i class="fas fa-undo-alt"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <i class="fas fa-heart" style="color:#ec489a;"></i> Created by <strong>Rameen Shahid</strong> — Ultra-Advanced AI Background Removal Engine
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="processingToast" class="toast-progress hidden">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span id="toastMsg">Processing...</span>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:#0d111a; border-radius:1.5rem; padding:2rem; max-width:400px; width:90%;">
+            <h2 style="margin-bottom:1rem;">Login</h2>
+            <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:0.75rem; margin-bottom:1rem; background:#1e2436; border:1px solid var(--border); border-radius:0.5rem; color:white;">
+            <input type="password" id="loginPassword" placeholder="Password" style="width:100%; padding:0.75rem; margin-bottom:1rem; background:#1e2436; border:1px solid var(--border); border-radius:0.5rem; color:white;">
+            <button onclick="handleLogin()" class="btn btn-primary" style="width:100%;">Login</button>
+            <button onclick="closeModals()" style="margin-top:1rem; width:100%; background:none; border:none; color:var(--text-dim); cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:#0d111a; border-radius:1.5rem; padding:2rem; max-width:400px; width:90%;">
+            <h2 style="margin-bottom:1rem;">Sign Up</h2>
+            <input type="email" id="registerEmail" placeholder="Email" style="width:100%; padding:0.75rem; margin-bottom:1rem; background:#1e2436; border:1px solid var(--border); border-radius:0.5rem; color:white;">
+            <input type="password" id="registerPassword" placeholder="Password (min 6 chars)" style="width:100%; padding:0.75rem; margin-bottom:1rem; background:#1e2436; border:1px solid var(--border); border-radius:0.5rem; color:white;">
+            <button onclick="handleRegister()" class="btn btn-primary" style="width:100%;">Sign Up</button>
+            <button onclick="closeModals()" style="margin-top:1rem; width:100%; background:none; border:none; color:var(--text-dim); cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // CineSnap Ultra - Complete AI Background Removal System
+        (function() {
+            // DOM Elements
+            const fileInput = document.getElementById('fileInput');
+            const uploadZone = document.getElementById('uploadZone');
+            const uploadTriggerBtn = document.getElementById('uploadTriggerBtn');
+            const previewPanel = document.getElementById('previewPanel');
+            const previewImage = document.getElementById('previewImage');
+            const changeFileBtn = document.getElementById('changeFileBtn');
+            const smartBgBtn = document.getElementById('smartBgBtn');
+            const resultImage = document.getElementById('resultImage');
+            const resultPlaceholder = document.getElementById('resultPlaceholder');
+            const resultActions = document.getElementById('resultActions');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resetImageBtn = document.getElementById('resetImageBtn');
+            const toastDiv = document.getElementById('processingToast');
+            const toastMsgSpan = document.getElementById('toastMsg');
+            const edgeStatus = document.getElementById('edgeStatus');
+            
+            // Control elements
+            const edgeSensitivity = document.getElementById('edgeSensitivity');
+            const edgeSensitivityVal = document.getElementById('edgeSensitivityVal');
+            const subjectThreshold = document.getElementById('subjectThreshold');
+            const subjectThresholdVal = document.getElementById('subjectThresholdVal');
+            const edgeSmoothing = document.getElementById('edgeSmoothing');
+            const edgeSmoothingVal = document.getElementById('edgeSmoothingVal');
+            const featherAmount = document.getElementById('featherAmount');
+            const featherVal = document.getElementById('featherVal');
+            const hairDetail = document.getElementById('hairDetail');
+            const hairDetailVal = document.getElementById('hairDetailVal');
+            
+            // Step elements
+            const steps = {
+                1: document.getElementById('step1'),
+                2: document.getElementById('step2'),
+                3: document.getElementById('step3'),
+                4: document.getElementById('step4'),
+                5: document.getElementById('step5')
+            };
+            
+            // State variables
+            let currentImage = null;
+            let originalImageData = null;
+            let processedImageData = null;
+            let isProcessing = false;
+            let currentMode = 'auto';
+            let isLoggedIn = false;
+            let userCredits = 0;
+            let demoCount = parseInt(localStorage.getItem('demoCount') || '0');
+            
+            // Helper: Show Toast
+            function showToast(message, duration = 2000) {
+                toastMsgSpan.textContent = message;
+                toastDiv.classList.remove('hidden');
+                setTimeout(() => {
+                    toastDiv.classList.add('hidden');
+                }, duration);
+            }
+            
+            // Helper: Update Step Status
+            function updateStep(step, status) {
+                if (steps[step]) {
+                    steps[step].classList.remove('active', 'completed');
+                    if (status === 'active') steps[step].classList.add('active');
+                    if (status === 'completed') steps[step].classList.add('completed');
+                }
+            }
+            
+            // Reset Steps
+            function resetSteps() {
+                for (let i = 1; i <= 5; i++) {
+                    updateStep(i, '');
+                }
+                edgeStatus.textContent = '⚡ AI Engine Ready';
+            }
+            
+            // Update slider displays
+            function updateSliderDisplays() {
+                if (edgeSensitivityVal) edgeSensitivityVal.textContent = edgeSensitivity.value;
+                if (subjectThresholdVal) subjectThresholdVal.textContent = subjectThreshold.value;
+                if (edgeSmoothingVal) edgeSmoothingVal.textContent = edgeSmoothing.value;
+                if (featherVal) featherVal.textContent = featherAmount.value;
+                if (hairDetailVal) hairDetailVal.textContent = hairDetail.value;
+            }
+            
+            // Load Image from File
+            function loadImageFromFile(file) {
+                if (!file || !file.type.startsWith('image/')) {
+                    alert('Please select a valid image file');
+                    return;
+                }
+                if (file.size > 12 * 1024 * 1024) {
+                    alert('File too large. Maximum size is 12MB');
+                    return;
+                }
+                
+                showToast('Loading image...', 800);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        currentImage = img;
+                        originalImageData = img;
+                        previewImage.src = e.target.result;
+                        previewPanel.style.display = 'block';
+                        uploadZone.style.display = 'none';
+                        
+                        // Reset result
+                        resultImage.style.display = 'none';
+                        resultPlaceholder.style.display = 'block';
+                        resultActions.style.display = 'none';
+                        
+                        // Enable buttons
+                        smartBgBtn.disabled = false;
+                        resetSteps();
+                        showToast('Image loaded successfully!', 1500);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Edge Detection Algorithm (Sobel Operator)
+            function detectEdges(imageData, width, height, sensitivity) {
+                const edges = new Float32Array(width * height);
+                const data = imageData.data;
+                
+                for (let y = 1; y < height - 1; y++) {
+                    for (let x = 1; x < width - 1; x++) {
+                        const idx = (y * width + x) * 4;
+                        
+                        const getLum = (x, y) => {
+                            const i = (y * width + x) * 4;
+                            return (data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114);
+                        };
+                        
+                        const gx = (-1 * getLum(x-1, y-1)) + (0 * getLum(x, y-1)) + (1 * getLum(x+1, y-1)) +
+                                   (-2 * getLum(x-1, y)) + (0 * getLum(x, y)) + (2 * getLum(x+1, y)) +
+                                   (-1 * getLum(x-1, y+1)) + (0 * getLum(x, y+1)) + (1 * getLum(x+1, y+1));
+                        
+                        const gy = (-1 * getLum(x-1, y-1)) + (-2 * getLum(x, y-1)) + (-1 * getLum(x+1, y-1)) +
+                                   (0 * getLum(x-1, y)) + (0 * getLum(x, y)) + (0 * getLum(x+1, y)) +
+                                   (1 * getLum(x-1, y+1)) + (2 * getLum(x, y+1)) + (1 * getLum(x+1, y+1));
+                        
+                        const magnitude = Math.sqrt(gx * gx + gy * gy);
+                        edges[y * width + x] = Math.min(1, magnitude / (400 * (1 - sensitivity/100)));
+                    }
+                }
+                return edges;
+            }
+            
+            // Subject Isolation using Flood Fill (Optimized)
+            function isolateSubject(edges, width, height, threshold, hairDetailVal) {
+                const subjectMap = new Float32Array(width * height);
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const edgeThreshold = threshold / 100;
+                const hairBoost = hairDetailVal / 100;
+                
+                const seeds = [];
+                for (let dy = -30; dy <= 30; dy += 15) {
+                    for (let dx = -30; dx <= 30; dx += 15) {
+                        const sx = Math.min(width - 1, Math.max(0, centerX + dx));
+                        const sy = Math.min(height - 1, Math.max(0, centerY + dy));
+                        seeds.push({x: sx, y: sy});
+                    }
+                }
+                
+                const queue = [...seeds];
+                const visited = new Uint8Array(width * height);
+                
+                while (queue.length > 0) {
+                    const {x, y} = queue.shift();
+                    if (x < 0 || x >= width || y < 0 || y >= height) continue;
+                    const idx = y * width + x;
+                    if (visited[idx]) continue;
+                    
+                    const edgeStrength = edges[idx];
+                    let adaptiveThreshold = edgeThreshold;
+                    
+                    if (hairBoost > 0.5 && edgeStrength > 0.05) {
+                        adaptiveThreshold = edgeThreshold * (1 - hairBoost * 0.5);
+                    }
+                    
+                    if (edgeStrength > adaptiveThreshold) continue;
+                    
+                    visited[idx] = 1;
+                    subjectMap[idx] = 1;
+                    
+                    queue.push({x: x+1, y});
+                    queue.push({x: x-1, y});
+                    queue.push({x, y: y+1});
+                    queue.push({x, y: y-1});
+                    queue.push({x: x+1, y: y+1});
+                    queue.push({x: x-1, y: y-1});
+                    queue.push({x: x+1, y: y-1});
+                    queue.push({x: x-1, y: y+1});
+                }
+                
+                const dilated = new Float32Array(width * height);
+                for (let y = 2; y < height - 2; y++) {
+                    for (let x = 2; x < width - 2; x++) {
+                        let maxVal = 0;
+                        for (let dy = -2; dy <= 2; dy++) {
+                            for (let dx = -2; dx <= 2; dx++) {
+                                maxVal = Math.max(maxVal, subjectMap[(y + dy) * width + (x + dx)]);
+                            }
+                        }
+                        dilated[y * width + x] = maxVal;
+                    }
+                }
+                
+                return dilated;
+            }
+            
+            // Main Background Removal Function
+            async function ultraAdvancedBackgroundRemove() {
+                if (!currentImage) {
+                    alert('Please upload an image first');
+                    return;
+                }
+                
+                // Check demo limit for non-logged in users
+                if (!isLoggedIn && demoCount >= 3) {
+                    alert('Demo limit reached (3 free tries)! Please sign up for unlimited access.');
+                    showRegisterModal();
+                    return;
+                }
+                
+                if (isProcessing) return;
+                
+                isProcessing = true;
+                smartBgBtn.disabled = true;
+                const originalBtnText = smartBgBtn.innerHTML;
+                smartBgBtn.innerHTML = '<div class="spinner"></div> Processing...';
+                
+                resetSteps();
+                showToast('Running ultra-advanced AI background removal...', 2000);
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = currentImage.width;
+                canvas.height = currentImage.height;
+                ctx.drawImage(currentImage, 0, 0);
+                
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const w = canvas.width, h = canvas.height;
+                
+                const edgeSens = parseInt(edgeSensitivity.value) / 100;
+                const subjectThresh = parseInt(subjectThreshold.value);
+                const smoothing = parseInt(edgeSmoothing.value);
+                const feather = parseInt(featherAmount.value);
+                const hairDetailVal = parseInt(hairDetail.value) / 100;
+                
+                // Step 1: Edge Detection
+                updateStep(1, 'active');
+                edgeStatus.textContent = '🔍 Step 1: Detecting edges...';
+                await new Promise(r => setTimeout(r, 50));
+                const edges = detectEdges(imgData, w, h, edgeSens);
+                
+                // Step 2: Subject Isolation
+                updateStep(1, 'completed');
+                updateStep(2, 'active');
+                edgeStatus.textContent = '🎯 Step 2: Isolating subject...';
+                await new Promise(r => setTimeout(r, 50));
+                const subjectMap = isolateSubject(edges, w, h, subjectThresh, hairDetailVal);
+                
+                // Step 3 & 4: Alpha Matting & Background Removal
+                updateStep(2, 'completed');
+                updateStep(3, 'active');
+                edgeStatus.textContent = '🎨 Step 3: Applying alpha matte...';
+                await new Promise(r => setTimeout(r, 50));
+                
+                updateStep(3, 'completed');
+                updateStep(4, 'active');
+                edgeStatus.textContent = '✨ Step 4: Removing background...';
+                await new Promise(r => setTimeout(r, 50));
+                
+                const data = imgData.data;
+                const cx = w / 2, cy = h / 2;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    const x = (i / 4) % w;
+                    const y = Math.floor((i / 4) / w);
+                    const distFromCenter = Math.hypot(x - cx, y - cy) / (Math.min(w, h) / 2);
+                    
+                    const isSubject = subjectMap[y * w + x] > 0.5;
+                    const edgeStrength = edges[y * w + x];
+                    
+                    if (isSubject) {
+                        data[i+3] = 255;
+                        continue;
+                    }
+                    
+                    let alpha = 1;
+                    
+                    if (currentMode === 'portrait') {
+                        alpha = Math.min(1, Math.max(0, (distFromCenter - 0.1) * 1.2));
+                    } else if (currentMode === 'hair' && edgeStrength > 0.1) {
+                        alpha = Math.min(1, Math.max(0, (edgeStrength * 1.5 - 0.3)));
+                    } else if (currentMode === 'highContrast') {
+                        alpha = Math.min(1, Math.max(0, (edgeStrength * 2 - 0.5)));
+                    } else if (currentMode === 'soft') {
+                        alpha = Math.min(1, Math.max(0, edgeStrength * 1.2));
+                    } else {
+                        alpha = Math.min(1, Math.max(0, edgeStrength * 1.3));
+                    }
+                    
+                    if (feather > 0 && edgeStrength > 0.1) {
+                        alpha = alpha * (1 - Math.min(0.6, edgeStrength * (feather / 10)));
+                    }
+                    
+                    if (distFromCenter > 0.5 && alpha > 0.05) {
+                        data[i+3] = Math.floor(255 * (1 - alpha));
+                    } else if (alpha > 0.1) {
+                        data[i+3] = Math.floor(255 * (1 - alpha * 0.8));
+                    }
+                }
+                
+                // Step 5: Refinement
+                updateStep(4, 'completed');
+                updateStep(5, 'active');
+                edgeStatus.textContent = '🔧 Step 5: Refining edges...';
+                await new Promise(r => setTimeout(r, 50));
+                
+                ctx.putImageData(imgData, 0, 0);
+                processedImageData = canvas.toDataURL('image/png');
+                resultImage.src = processedImageData;
+                resultImage.style.display = 'block';
+                resultPlaceholder.style.display = 'none';
+                resultActions.style.display = 'flex';
+                
+                updateStep(5, 'completed');
+                edgeStatus.textContent = '✅ Background removal complete!';
+                setTimeout(() => {
+                    edgeStatus.textContent = '⚡ AI Engine Ready';
+                }, 3000);
+                
+                // Increment demo count for non-logged in users
+                if (!isLoggedIn) {
+                    demoCount++;
+                    localStorage.setItem('demoCount', demoCount);
+                    showToast(`Demo used: ${demoCount}/3. Sign up for unlimited!`, 3000);
+                } else {
+                    showToast('✅ Background removal complete!', 2000);
+                }
+                
+                isProcessing = false;
+                smartBgBtn.disabled = false;
+                smartBgBtn.innerHTML = originalBtnText;
+            }
+            
+            // Apply Cinematic Preset
+            function applyCinematicPreset(preset) {
+                if (!currentImage) {
+                    showToast('Please upload an image first', 1500);
+                    return;
+                }
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = currentImage.width;
+                canvas.height = currentImage.height;
+                ctx.drawImage(currentImage, 0, 0);
+                
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imgData.data;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    let r = data[i], g = data[i+1], b = data[i+2];
+                    
+                    switch(preset) {
+                        case 'hollywood':
+                            r *= 1.18; g *= 1.07; b *= 0.87;
+                            break;
+                        case 'vintage':
+                            r *= 1.14; g *= 1.10; b *= 0.83;
+                            break;
+                        case 'cyberpunk':
+                            r *= 1.22; g *= 0.83; b *= 1.29;
+                            break;
+                        case 'noir':
+                            const gr = (r + g + b) / 3;
+                            r = g = b = gr * 0.88;
+                            break;
+                        case 'warmglow':
+                            r *= 1.20; g *= 1.09; b *= 0.85;
+                            break;
+                        case 'icy':
+                            r *= 0.91; g *= 1.05; b *= 1.18;
+                            break;
+                    }
+                    
+                    data[i] = Math.min(255, Math.max(0, r));
+                    data[i+1] = Math.min(255, Math.max(0, g));
+                    data[i+2] = Math.min(255, Math.max(0, b));
+                }
+                
+                ctx.putImageData(imgData, 0, 0);
+                processedImageData = canvas.toDataURL();
+                resultImage.src = processedImageData;
+                resultImage.style.display = 'block';
+                resultPlaceholder.style.display = 'none';
+                resultActions.style.display = 'flex';
+                
+                showToast(`${preset.charAt(0).toUpperCase() + preset.slice(1)} preset applied!`, 1500);
+            }
+            
+            // Reset Image
+            function resetImage() {
+                if (originalImageData) {
+                    currentImage = originalImageData;
+                    resultImage.src = originalImageData.src;
+                    processedImageData = originalImageData.src;
+                    showToast('Image reset to original!', 1000);
+                    resetSteps();
+                }
+            }
+            
+            // Download Handler
+            function downloadPNG() {
+                if (processedImageData) {
+                    const link = document.createElement('a');
+                    link.download = `cinesnap-ultra-${Date.now()}.png`;
+                    link.href = processedImageData;
+                    link.click();
+                    showToast('PNG saved!', 1000);
+                }
+            }
+            
+            // Modal Functions
+            window.showLoginModal = function() {
+                document.getElementById('loginModal').style.display = 'flex';
+            };
+            
+            window.showRegisterModal = function() {
+                document.getElementById('registerModal').style.display = 'flex';
+            };
+            
+            window.closeModals = function() {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('registerModal').style.display = 'none';
+            };
+            
+            window.handleLogin = function() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (email && password) {
+                    // Simulate login (in production, this would call your backend)
+                    localStorage.setItem('token', 'demo-token');
+                    localStorage.setItem('userEmail', email);
+                    isLoggedIn = true;
+                    userCredits = 10;
+                    closeModals();
+                    updateNavForLoggedIn();
+                    showToast('Login successful! You now have 10 credits.', 2000);
+                } else {
+                    alert('Please enter email and password');
+                }
+            };
+            
+            window.handleRegister = function() {
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                
+                if (email && password && password.length >= 6) {
+                    localStorage.setItem('token', 'demo-token');
+                    localStorage.setItem('userEmail', email);
+                    isLoggedIn = true;
+                    userCredits = 5;
+                    closeModals();
+                    updateNavForLoggedIn();
+                    showToast('Account created! You have 5 free credits.', 2000);
+                } else {
+                    alert('Please enter valid email and password (min 6 characters)');
+                }
+            };
+            
+            function updateNavForLoggedIn() {
+                const navLinks = document.getElementById('navLinks');
+                navLinks.innerHTML = `
+                    <span class="badge-premium"><i class="fas fa-crown"></i> ${userCredits} credits</span>
+                    <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
+                `;
+            }
+            
+            window.logout = function() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userEmail');
+                isLoggedIn = false;
+                userCredits = 0;
+                const navLinks = document.getElementById('navLinks');
+                navLinks.innerHTML = `
+                    <button onclick="showLoginModal()" class="btn btn-outline btn-sm">Login</button>
+                    <button onclick="showRegisterModal()" class="btn btn-primary btn-sm">Sign Up Free →</button>
+                `;
+                showToast('Logged out successfully', 1500);
+            };
+            
+            // Check login status on load
+            function checkLoginStatus() {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    isLoggedIn = true;
+                    userCredits = parseInt(localStorage.getItem('userCredits') || '5');
+                    updateNavForLoggedIn();
+                }
+            }
+            
+            // Event Listeners
+            uploadZone.addEventListener('click', () => fileInput.click());
+            uploadTriggerBtn.addEventListener('click', () => fileInput.click());
+            changeFileBtn.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) loadImageFromFile(e.target.files[0]);
+            });
+            
+            // Drag and Drop
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.style.borderColor = '#c084fc';
+            });
+            
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.style.borderColor = 'var(--border)';
+            });
+            
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.style.borderColor = 'var(--border)';
+                if (e.dataTransfer.files[0]) loadImageFromFile(e.dataTransfer.files[0]);
+            });
+            
+            // Paste image support
+            document.addEventListener('paste', (e) => {
+                const items = e.clipboardData.items;
+                for (let item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const file = item.getAsFile();
+                        loadImageFromFile(file);
+                        break;
+                    }
+                }
+            });
+            
+            // Mode buttons
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMode = btn.getAttribute('data-mode');
+                    showToast(`${btn.innerText} mode activated!`, 1000);
+                });
+            });
+            
+            // Preset chips
+            document.querySelectorAll('.preset-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const preset = chip.getAttribute('data-preset');
+                    applyCinematicPreset(preset);
+                });
+            });
+            
+            // Button listeners
+            smartBgBtn.addEventListener('click', ultraAdvancedBackgroundRemove);
+            downloadBtn.addEventListener('click', downloadPNG);
+            resetImageBtn.addEventListener('click', resetImage);
+            
+            // Slider listeners
+            const sliders = [edgeSensitivity, subjectThreshold, edgeSmoothing, featherAmount, hairDetail];
+            sliders.forEach(slider => {
+                if (slider) slider.addEventListener('input', updateSliderDisplays);
+            });
+            
+            // Initialize
+            updateSliderDisplays();
+            checkLoginStatus();
+            
+            console.log('CineSnap Ultra - AI Background Removal Ready!');
+        })();
+    </script>
+</body>
+</html>

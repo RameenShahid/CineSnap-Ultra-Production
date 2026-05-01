@@ -1,0 +1,78 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.nuxt/
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pm2-*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# Coverage
+coverage/
+.nyc_output/
+.lcov/
+.coverage
+
+# Temporary files
+tmp/
+temp/
+uploads/
+downloads/
+*.tmp
+*.temp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Secrets
+*.key
+*.pem
+*.crt
+secrets/
+
+# Production
+*.min.js
+*.min.css
